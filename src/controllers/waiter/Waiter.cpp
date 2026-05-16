@@ -6,6 +6,7 @@ Waiter::Waiter(QObject *parent)
 
 void Waiter::menuSetter(QVariantList menu){
     m_menu = menu;
+    emit menuChanged();
 }
 
 QVariantList Waiter::menuGetter() const {

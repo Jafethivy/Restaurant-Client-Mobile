@@ -14,6 +14,10 @@ set(SERVICES
     src/services/AuthService.cpp
     src/services/TablesService.h
     src/services/TablesService.cpp
+    src/services/MenuService.h
+    src/services/MenuService.cpp
+    src/services/OrderService.h
+    src/services/OrderService.cpp
 )
 set(CONTROLLERS
     src/controllers/login/Login.h
@@ -63,7 +67,6 @@ qt_add_qml_module(appRestaurant_Client_Mobile
     VERSION 1.0
     QML_FILES
         ${QML_UI}
-        SOURCES src/services/MenuService.h src/services/MenuService.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

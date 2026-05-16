@@ -11,6 +11,7 @@
 #include "src/services/AuthService.h"
 #include "src/services/TablesService.h"
 #include "src/services/MenuService.h"
+#include "src/services/OrderService.h"
 
 AppContext::AppContext(QObject *parent)
     : QObject{parent}
@@ -41,11 +42,14 @@ void AppContext::createObjects(){
     m_tablesService->setBaseUrl(m_baseUrl); //Cambiar
     m_menuService = new MenuService();
     m_menuService->setBaseUrl(m_baseUrl); //cambiar
+    m_orderService = new OrderService();
+    m_orderService->setBaseUrl(m_baseUrl);
 
     connect(m_authService, &AuthService::loginStatus, this, [this](int area, bool success) {
         if (success) {
             m_tablesService->setToken(m_authService->token());
             m_menuService->setToken(m_authService->token());
+            m_orderService->setToken(m_authService->token());
             m_waiter->getMenu();
         }
     });
@@ -86,6 +90,9 @@ void AppContext::setupConnections() const {
         Qt::AutoConnection);
     QObject::connect(m_waiterController, &WaiterController::getMenu,
         m_menuService, &MenuService::getMenu,
+        Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::orderSubmitted,
+        m_orderService, &OrderService::createOrder,
         Qt::AutoConnection);
 
     QObject::connect(m_tablesService, &TablesService::tablesGetter,

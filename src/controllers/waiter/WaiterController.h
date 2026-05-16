@@ -18,6 +18,7 @@ signals:
 
     void tablesGetter(QVariantList tables);
     void menuGetter(QVariantList categories);
+    void orderSubmitted(int idTable, QVariantList order);
 
     void logoutWindow();
     void logoutServer();

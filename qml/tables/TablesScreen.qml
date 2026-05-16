@@ -95,9 +95,9 @@ Item {
                     TableItem {
                         tableId: modelData.idTable
                         tableStatus: modelData.status
+                        hasOrder: modelData.order
                         tableName: modelData.name || ("Mesa " + modelData.idTable)
                         extraData: modelData.extra || null
-                        hasOrder: modelData.order === 1
                         theme: tablesScreen.theme
                         width: (grid.width - grid.spacing) / 2
 

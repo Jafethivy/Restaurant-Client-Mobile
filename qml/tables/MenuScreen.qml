@@ -14,6 +14,24 @@ Item {
     signal requestBack()
     signal requestHelp()
 
+    function compileOrder() {
+        var order = []
+        var totalItems = 0
+
+        for (var i = 0; i < categoriesRepeater.count; i++) {
+            var category = categoriesRepeater.itemAt(i)
+            if (category) {
+                var items = category.getSelectedItems()
+                for (var j = 0; j < items.length; j++) {
+                    order.push(items[j])
+                    totalItems += items[j].quantity
+                }
+            }
+        }
+
+        return order
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 16
@@ -53,6 +71,7 @@ Item {
                 spacing: 12
 
                 Repeater {
+                    id: categoriesRepeater
                     model: categoriesModel
 
                     ExpandableCategory {
@@ -60,6 +79,7 @@ Item {
                         theme: tableMenuScreen.theme
                         categoryName: modelData.name || "Categoría"
                         dishesModel: modelData.dishes || []
+
                     }
                 }
             }
@@ -90,7 +110,14 @@ Item {
                 MouseArea {
                     id: mouseAreaHelp
                     anchors.fill: parent
-                    onClicked: test
+                    onClicked: {
+                        var order = tableMenuScreen.compileOrder()
+
+                        if (order.length === 0){return}
+
+                        // Enviar a C++
+                        Waiter.orderSubmitted(tableMenuScreen.tableId, order)
+                    }
                 }
             }
 

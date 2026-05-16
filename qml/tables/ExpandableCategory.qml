@@ -72,7 +72,6 @@ Rectangle {
                     if (dish) {
                         result.push({
                             dishId: parseInt(dishId),
-                            name: dish.name,
                             quantity: qty
                         })
                     }
@@ -103,7 +102,6 @@ Rectangle {
         anchors.fill: parent
         spacing: 0
 
-        // ═══════ HEADER (Siempre visible) ═══════
         Rectangle {
             width: parent.width
             height: headerHeight
@@ -148,7 +146,6 @@ Rectangle {
             }
         }
 
-        // ═══════ CONTENIDO DESPLEGABLE ═══════
         Column {
             width: parent.width
             visible: isExpanded
@@ -183,12 +180,10 @@ Rectangle {
                             elide: Text.ElideRight
                         }
 
-                        // ═══ CONTROLES DE CANTIDAD ═══
                         Row {
                             spacing: 8
                             Layout.preferredWidth: 120
 
-                            // Botón menos
                             Rectangle {
                                 width: 28
                                 height: 28
@@ -211,7 +206,6 @@ Rectangle {
                                 }
                             }
 
-                            // Cantidad actual (lee del diccionario, no del modelo)
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: getQuantity(modelData.id)
@@ -225,7 +219,6 @@ Rectangle {
                                 horizontalAlignment: Text.AlignHCenter
                             }
 
-                            // Botón más
                             Rectangle {
                                 width: 28
                                 height: 28

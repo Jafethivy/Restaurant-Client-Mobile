@@ -6,6 +6,8 @@ WaiterController::WaiterController(Waiter* waiter, QObject *parent)
 
     connect(m_waiter, &Waiter::getMenu,
         this, &WaiterController::getMenu);
+    connect(m_waiter, &Waiter::orderSubmitted,
+        this, &WaiterController::orderSubmitted);
 
     connect(this, &WaiterController::tablesGetter,
         m_waiter, &Waiter::tablesGetter);

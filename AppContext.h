@@ -14,6 +14,7 @@ class WaiterController;
 class AuthService;
 class TablesService;
 class MenuService;
+class OrderService;
 
 class AppContext : public QObject
 {
@@ -45,4 +46,5 @@ private:
     AuthService* m_authService = nullptr;
     TablesService* m_tablesService = nullptr;
     MenuService* m_menuService = nullptr;
+    OrderService* m_orderService = nullptr;
 };

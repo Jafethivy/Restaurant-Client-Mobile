@@ -6,11 +6,10 @@ Rectangle {
     // Propiedades que C++ setea vía bindings
     property int tableId: 0
     property int tableStatus: 0
+    property bool hasOrder: false   // true = orden activa, false = sin ordenes
     property string tableName: "Mesa " + tableId
     property var extraData: null
     property var theme: null
-    property bool hasOrder: false   // true = orden activa, false = sin ordenes
-
     width: 150
     height: 120
     radius: theme.borderRadiusSmall
@@ -88,7 +87,11 @@ Rectangle {
         id: mouseAreaTable
         anchors.fill: parent
         enabled: tableStatus === 2
-        onClicked: tableSelected(tableId, tableStatus)
+        onClicked: if(!hasOrder){
+            tableSelected(tableId, tableStatus)
+        }else{
+            console.log("asdadasda")
+        }
     }
 
     signal tableSelected(int id, int status)
