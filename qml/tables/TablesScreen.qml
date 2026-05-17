@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import WaiterLogic 1.0
 import "../"
+import "../utils"
 
 Item {
     id: tablesScreen
@@ -13,8 +14,20 @@ Item {
     property int currentTableId: 0
     property bool menuVisible: false
 
+    property int currentOrderId: 0
+    property bool orderVisible: false
+
     function onTablesLoaded(tablesData) {
         tablesModel = tablesData
+    }
+
+    function onTableOrderStatus(tableId, hasOrder, orderId){
+        var newModel = [...tablesModel]
+        if (newModel[tableId - 1]){
+            newModel[tableId - 1].order = hasOrder
+            newModel[tableId - 1].idOrder = orderId
+        }
+        tablesModel = newModel
     }
 
     function onTableStatusChanged(tableId, status, extraData) {
@@ -40,12 +53,18 @@ Item {
         tablesModel = newModel
     }
 
-
-    function requestTable(id, status) {
+    function requestTable(tableId, status) {
         if (status === 2) {
-            currentTableId = id
+            currentTableId = tableId
             menuVisible = true
         }
+    }
+
+    function requestOrder(tableId, orderId) {
+        currentTableId = tableId
+        currentOrderId = orderId
+        menuVisible = false
+        orderVisible = true
     }
 
     Connections{
@@ -54,6 +73,9 @@ Item {
         function onTablesGetter(tables){
             onTablesLoaded(tables)
         }
+        function onChangeTableStatus(tableId, hasOrder, orderId){
+            onTableOrderStatus(tableId, hasOrder, orderId)
+        }
     }
 
     ColumnLayout {
@@ -61,7 +83,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 16
         spacing: 16
-        visible: !tablesScreen.menuVisible
+        visible: !tablesScreen.menuVisible && !tablesScreen.orderVisible
 
         Rectangle {
             Layout.fillWidth: true
@@ -96,15 +118,17 @@ Item {
                         tableId: modelData.idTable
                         tableStatus: modelData.status
                         hasOrder: modelData.order
+                        orderId: modelData.idOrder
                         tableName: modelData.name || ("Mesa " + modelData.idTable)
                         extraData: modelData.extra || null
                         theme: tablesScreen.theme
                         width: (grid.width - grid.spacing) / 2
 
-                        onTableSelected: function(id, status) {
-                            if (status === 2) {
-                                requestTable(id, status)
-                            }
+                        onTableSelected: function(tableId, status) {
+                            requestTable(tableId, status)
+                        }
+                        onOrderSelected: function(tableId, orderId){
+                            requestOrder(tableId, orderId)
                         }
                     }
                 }
@@ -168,6 +192,26 @@ Item {
 
             onRequestBack: tablesScreen.menuVisible = false
             onRequestHelp: requestHelp()
+        }
+    }
+
+    CustomLoader {
+        id: orderScreenLoader
+        anchors.fill: parent
+        active: tablesScreen.orderVisible
+        onScreenReady:{
+            Waiter.getOrder(currentOrderId)
+        }
+        sourceComponent: OrderScreen {
+            theme: tablesScreen.theme
+            tableId: tablesScreen.currentTableId
+            orderId: tablesScreen.currentOrderId
+
+            onRequestBack: tablesScreen.orderVisible = false
+            onRequestCloseOrder: function(orderId, orderData) {
+                Waiter.closeOrder(orderId, orderData)
+                orderScreenLoader.active = false
+            }
         }
     }
 }

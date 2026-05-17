@@ -7,6 +7,7 @@ Rectangle {
     property int tableId: 0
     property int tableStatus: 0
     property bool hasOrder: false   // true = orden activa, false = sin ordenes
+    property int orderId: 0
     property string tableName: "Mesa " + tableId
     property var extraData: null
     property var theme: null
@@ -90,9 +91,10 @@ Rectangle {
         onClicked: if(!hasOrder){
             tableSelected(tableId, tableStatus)
         }else{
-            console.log("asdadasda")
+            orderSelected(tableId, orderId)
         }
     }
 
-    signal tableSelected(int id, int status)
+    signal tableSelected(int tableId, int status)
+    signal orderSelected(int tableId, int orderId)
 }

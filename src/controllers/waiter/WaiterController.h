@@ -15,14 +15,18 @@ public:
 
 signals:
     void getMenu();
-
     void tablesGetter(QVariantList tables);
     void menuGetter(QVariantList categories);
+    void orderGetter(QVariantList order);
+
+    void getOrder(int orderId);
+
     void orderSubmitted(int idTable, QVariantList order);
+    void orderCreated(QVariantMap order);
+
 
     void logoutWindow();
     void logoutServer();
-
 private:
     Waiter* m_waiter = nullptr;
 };

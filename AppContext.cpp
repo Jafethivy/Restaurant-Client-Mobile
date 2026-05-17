@@ -91,6 +91,9 @@ void AppContext::setupConnections() const {
     QObject::connect(m_waiterController, &WaiterController::getMenu,
         m_menuService, &MenuService::getMenu,
         Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::getOrder,
+        m_orderService, &OrderService::getOrder);
+
     QObject::connect(m_waiterController, &WaiterController::orderSubmitted,
         m_orderService, &OrderService::createOrder,
         Qt::AutoConnection);
@@ -101,6 +104,9 @@ void AppContext::setupConnections() const {
     QObject::connect(m_menuService, &MenuService::menuGetter,
         m_waiterController, &WaiterController::menuGetter,
         Qt::AutoConnection);
+    QObject::connect(m_orderService, &OrderService::orderLoaded,
+        m_waiterController, &WaiterController::orderGetter,
+        Qt::AutoConnection);
 
     QObject::connect(m_waiterController, &WaiterController::logoutWindow,
         m_appWindow, &AppWindow::goToLogin,
@@ -110,6 +116,10 @@ void AppContext::setupConnections() const {
         Qt::AutoConnection);
     QObject::connect(m_waiterController, &WaiterController::logoutServer,
         m_authService, &AuthService::logout,
+        Qt::AutoConnection);
+
+    QObject::connect(m_orderService, &OrderService::orderCreated,
+        m_waiterController, &WaiterController::orderCreated,
         Qt::AutoConnection);
 }
 

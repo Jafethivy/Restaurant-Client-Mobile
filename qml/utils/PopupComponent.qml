@@ -99,7 +99,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 height: 1
-                color: theme ? theme.backgroundCard : "#0f3460"
+                color: "#0f3460"
             }
 
             // Mensaje
@@ -110,7 +110,7 @@ Rectangle {
                     family: theme ? theme.fontFamily : "Roboto"
                     pixelSize: theme ? theme.fontSizeMedium : 16
                 }
-                color: theme ? theme.textSecondary : "#eaeaea"
+                color: theme ? theme.textPlaceholder : "#eaeaea"
                 wrapMode: Text.Wrap
                 Layout.fillWidth: true
             }

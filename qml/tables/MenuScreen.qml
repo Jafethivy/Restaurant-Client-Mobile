@@ -115,7 +115,6 @@ Item {
 
                         if (order.length === 0){return}
 
-                        // Enviar a C++
                         Waiter.orderSubmitted(tableMenuScreen.tableId, order)
                     }
                 }

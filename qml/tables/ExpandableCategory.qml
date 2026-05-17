@@ -10,11 +10,11 @@ Rectangle {
 
     // Diccionario interno: { dishId: quantity }
     property var selectedQuantities: ({})
+    property var preloadedQuantities: ({})
 
     signal dishQuantityChanged(int dishId, int newQuantity, string dishName)
     signal categoryExpanded(bool isExpanded)
 
-    // ─── Estado Interno ───
     property bool isExpanded: false
     property int headerHeight: 50
     property int dishRowHeight: 45
@@ -27,6 +27,7 @@ Rectangle {
     height: headerHeight + (isExpanded ? dishesModel.length * dishRowHeight : 0)
     Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 
+    //Funciones Principales
     function getQuantity(dishId) {
         return selectedQuantities[dishId] || 0
     }
@@ -85,10 +86,23 @@ Rectangle {
         selectedQuantities = ({})
     }
 
-    // ═══════════════════════════════════════════════════
-    // Funciones Privadas (helpers)
-    // ═══════════════════════════════════════════════════
+    //Funciones Secundarias
+    Component.onCompleted: applyPreloadedQuantities()
+    onPreloadedQuantitiesChanged: applyPreloadedQuantities()
 
+    function applyPreloadedQuantities() {
+        if (!preloadedQuantities) return
+        var newQty = {}
+        for (var i = 0; i < dishesModel.length; i++) {
+            var dishId = dishesModel[i].id
+            if (preloadedQuantities[dishId] !== undefined && preloadedQuantities[dishId] > 0) {
+                newQty[dishId] = preloadedQuantities[dishId]
+            }
+        }
+        selectedQuantities = newQty
+    }
+
+    // Funciones Privadas (helpers)
     function updateDishQuantity(index, delta) {
         var dish = dishesModel[index]
         var dishId = dish.id

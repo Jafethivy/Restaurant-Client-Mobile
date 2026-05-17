@@ -19,14 +19,14 @@ public:
     void setToken(const QString &token);
 
     void createOrder(int id_table, const QVariantList &items);
-    void getOrderByTable(int id_table);
+    void getOrder(int id_order);
     void updateOrder(int id_order, const QVariantList &items);
     void cancelOrder(int id_order);
     void completeOrder(int id_order);
 
 signals:
     void orderCreated(QVariantMap order);
-    void orderLoaded(QVariantMap order);
+    void orderLoaded(QVariantList order);
     void orderUpdated(QVariantMap result);
     void orderCancelled(int id_order);
     void orderCompleted(int id_order);
@@ -34,7 +34,7 @@ signals:
 
 private slots:
     void onCreateOrderFinished();
-    void onGetOrderByTableFinished();
+    void onGetOrderFinished();
     void onUpdateOrderFinished();
     void onCancelOrderFinished();
     void onCompleteOrderFinished();
@@ -49,4 +49,5 @@ private:
                                const QJsonObject &body = QJsonObject());
     void handleNetworkError(QNetworkReply *reply);
     QVariantMap jsonObjectToVariantMap(const QJsonObject &obj);
+    QVariantList jsonObjectToList(const QJsonObject &obj);
 };

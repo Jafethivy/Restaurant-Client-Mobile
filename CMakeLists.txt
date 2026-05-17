@@ -56,11 +56,12 @@ set(QML_UI
     qml/LoginScreen.qml
 
     ${UTILS}/PopupComponent.qml
-
+    ${UTILS}/CustomLoader.qml
     ${QML_TABLES}/TableItem.qml
     ${QML_TABLES}/TablesScreen.qml
     ${QML_TABLES}/MenuScreen.qml
     ${QML_TABLES}/ExpandableCategory.qml
+    ${QML_TABLES}/OrderScreen.qml
 )
 qt_add_qml_module(appRestaurant_Client_Mobile
     URI Restaurant_Client_Mobile

@@ -21,8 +21,7 @@ void OrderService::setToken(const QString &token)
 // ============================================
 // POST /api/orders
 // ============================================
-void OrderService::createOrder(int id_table, const QVariantList &items)
-{
+void OrderService::createOrder(int id_table, const QVariantList &items){
     QJsonObject body;
     body["id_table"] = id_table;
 
@@ -40,8 +39,7 @@ void OrderService::createOrder(int id_table, const QVariantList &items)
     connect(reply, &QNetworkReply::finished, this, &OrderService::onCreateOrderFinished);
 }
 
-void OrderService::onCreateOrderFinished()
-{
+void OrderService::onCreateOrderFinished(){
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     if (!reply) return;
     reply->deleteLater();
@@ -63,16 +61,14 @@ void OrderService::onCreateOrderFinished()
 }
 
 // ============================================
-// GET /api/orders/table/:id
+// GET /api/orders/table/:id_order
 // ============================================
-void OrderService::getOrderByTable(int id_table)
-{
-    QNetworkReply *reply = sendRequest(QString("/orders/table/%1").arg(id_table));
-    connect(reply, &QNetworkReply::finished, this, &OrderService::onGetOrderByTableFinished);
+void OrderService::getOrder(int id_order){
+    QNetworkReply *reply = sendRequest(QString("/orders/order/%1").arg(id_order));
+    connect(reply, &QNetworkReply::finished, this, &OrderService::onGetOrderFinished);
 }
 
-void OrderService::onGetOrderByTableFinished()
-{
+void OrderService::onGetOrderFinished(){
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     if (!reply) return;
     reply->deleteLater();
@@ -88,7 +84,7 @@ void OrderService::onGetOrderByTableFinished()
 
     if (result["success"].toBool()) {
         QJsonObject orderObj = result["order"].toObject();
-        emit orderLoaded(jsonObjectToVariantMap(orderObj));
+        emit orderLoaded(jsonObjectToList(orderObj));
     } else {
         emit operationFailed(result["error"].toString());
     }
@@ -236,11 +232,51 @@ void OrderService::handleNetworkError(QNetworkReply *reply)
     emit operationFailed(errorMsg);
 }
 
-QVariantMap OrderService::jsonObjectToVariantMap(const QJsonObject &obj)
-{
+QVariantMap OrderService::jsonObjectToVariantMap(const QJsonObject &obj){
     QVariantMap map;
     for (auto it = obj.begin(); it != obj.end(); ++it) {
         map.insert(it.key(), it.value().toVariant());
     }
     return map;
+}
+
+QVariantList OrderService::jsonObjectToList(const QJsonObject &obj)
+{
+    QVariantList list;
+
+    // Extraer el array bajo la clave "items"
+    if (!obj.contains("items") || !obj["items"].isArray()) {
+        qWarning() << "jsonObjectToList: no se encontró 'items' o no es un array";
+        return list;
+    }
+
+    QJsonArray itemsArray = obj["items"].toArray();
+
+    for (const QJsonValue &val : std::as_const(itemsArray)) {
+        if (!val.isObject()) continue;
+
+        QJsonObject itemObj = val.toObject();
+        QVariantMap itemMap;
+
+        // Normalizar id_menu a int (evita qlonglong en QML)
+        if (itemObj.contains("id_menu")) {
+            itemMap.insert("id_menu", itemObj["id_menu"].toVariant().toInt());
+        }
+
+        // Normalizar quantity a int
+        if (itemObj.contains("quantity")) {
+            itemMap.insert("quantity", itemObj["quantity"].toVariant().toInt());
+        }
+
+        // Si hay más campos en el futuro, los copiamos automáticamente
+        for (const QString &key : itemObj.keys()) {
+            if (!itemMap.contains(key)) {
+                itemMap.insert(key, itemObj[key].toVariant());
+            }
+        }
+
+        list.append(itemMap);
+    }
+    qDebug() << list;
+    return list;
 }
