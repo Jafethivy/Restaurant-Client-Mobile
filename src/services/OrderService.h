@@ -22,13 +22,14 @@ public:
     void getOrder(int id_order);
     void updateOrder(int id_order, const QVariantList &items);
     void cancelOrder(int id_order);
+    void totalOrder(int id_order, const QVariantList &items);
     void completeOrder(int id_order);
 
 signals:
     void orderCreated(QVariantMap order);
     void orderLoaded(QVariantList order);
-    void orderUpdated(QVariantMap result);
     void orderCancelled(int id_order);
+    void orderTotal(double total);
     void orderCompleted(int id_order);
     void operationFailed(QString error);
 
@@ -37,6 +38,7 @@ private slots:
     void onGetOrderFinished();
     void onUpdateOrderFinished();
     void onCancelOrderFinished();
+    void onTotalOrderFinished();
     void onCompleteOrderFinished();
 
 private:

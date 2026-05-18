@@ -76,6 +76,9 @@ Item {
         function onChangeTableStatus(tableId, hasOrder, orderId){
             onTableOrderStatus(tableId, hasOrder, orderId)
         }
+        function onChangeTableCompleted(tableId, hasOrder, orderId){
+            onTableOrderStatus(tableId, hasOrder, orderId)
+        }
     }
 
     ColumnLayout {
@@ -209,7 +212,6 @@ Item {
 
             onRequestBack: tablesScreen.orderVisible = false
             onRequestCloseOrder: function(orderId, orderData) {
-                Waiter.closeOrder(orderId, orderData)
                 orderScreenLoader.active = false
             }
         }

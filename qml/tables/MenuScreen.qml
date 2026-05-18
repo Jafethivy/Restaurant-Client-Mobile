@@ -32,6 +32,14 @@ Item {
         return order
     }
 
+    Connections{
+        target: Waiter
+
+        function onCloseSome_thing(){
+            requestBack()
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 16

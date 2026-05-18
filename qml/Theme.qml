@@ -4,7 +4,7 @@ QtObject {
     // Colores de fondo
     readonly property color backgroundPrimary: "#1a1a2e"
     readonly property color backgroundSecondary: "#778EBB"
-    readonly property color backgroundThird: "#A48465"
+    readonly property color backgroundThird: "#DDDBF1"
 
     // Colores de texto
     readonly property color textPrimary: "#DDDBF1"

@@ -62,6 +62,7 @@ set(QML_UI
     ${QML_TABLES}/MenuScreen.qml
     ${QML_TABLES}/ExpandableCategory.qml
     ${QML_TABLES}/OrderScreen.qml
+    ${QML_TABLES}/OrderClosePopup.qml
 )
 qt_add_qml_module(appRestaurant_Client_Mobile
     URI Restaurant_Client_Mobile

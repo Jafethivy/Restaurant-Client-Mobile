@@ -18,4 +18,11 @@ void Waiter::orderCreated(QVariantMap order){
     int hasOrder = order["success"].toBool();
     int orderId = order["id_order"].toInt();
     emit changeTableStatus(tableId, hasOrder, orderId);
+    emit closeSome_thing();
+}
+
+void Waiter::orderCompleted(int id_table){
+    qDebug() << id_table;
+    emit changeTableCompleted(id_table, 0, 0);
+    emit closeSomething();
 }

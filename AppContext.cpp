@@ -92,10 +92,20 @@ void AppContext::setupConnections() const {
         m_menuService, &MenuService::getMenu,
         Qt::AutoConnection);
     QObject::connect(m_waiterController, &WaiterController::getOrder,
-        m_orderService, &OrderService::getOrder);
+        m_orderService, &OrderService::getOrder,
+        Qt::AutoConnection);
 
     QObject::connect(m_waiterController, &WaiterController::orderSubmitted,
         m_orderService, &OrderService::createOrder,
+        Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::orderEdit,
+        m_orderService, &OrderService::updateOrder,
+        Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::orderGetTotal,
+        m_orderService, &OrderService::totalOrder,
+        Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::orderComplete,
+        m_orderService, &OrderService::completeOrder,
         Qt::AutoConnection);
 
     QObject::connect(m_tablesService, &TablesService::tablesGetter,
@@ -106,6 +116,12 @@ void AppContext::setupConnections() const {
         Qt::AutoConnection);
     QObject::connect(m_orderService, &OrderService::orderLoaded,
         m_waiterController, &WaiterController::orderGetter,
+        Qt::AutoConnection);
+    QObject::connect(m_orderService, &OrderService::orderTotal,
+        m_waiterController, &WaiterController::orderTotal,
+        Qt::AutoConnection);
+    QObject::connect(m_orderService, &OrderService::orderCompleted,
+        m_waiterController, &WaiterController::orderCompleted,
         Qt::AutoConnection);
 
     QObject::connect(m_waiterController, &WaiterController::logoutWindow,

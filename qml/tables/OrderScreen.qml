@@ -37,6 +37,12 @@ Item {
         function onOrderGetter(order){
             orderItems = order
         }
+        function onOrderTotal(total){
+            closePopup.open(orderId, total)
+        }
+        function onCloseSomething(){
+            requestBack()
+        }
     }
 
     ColumnLayout {
@@ -48,7 +54,7 @@ Item {
             Layout.fillWidth: true
             height: 60
             radius: theme.borderRadiusSmall
-            color: theme.backgroundSecondary
+            color: theme.backgroundThird
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
@@ -63,7 +69,7 @@ Item {
                         pixelSize: theme.fontSizeLarge
                         bold: true
                     }
-                    color: theme.textPrimary
+                    color: theme.textPlaceholder
                 }
 
                 Text {
@@ -72,7 +78,7 @@ Item {
                         family: theme.fontFamily
                         pixelSize: theme.fontSizeSmall
                     }
-                    color: theme.textSecondary
+                    color: theme.textPlaceholder
                 }
             }
         }
@@ -157,7 +163,6 @@ Item {
 
                     Behavior on opacity { NumberAnimation { duration: 150 } }
 
-                    // ── Editar Pedido ──
                     Rectangle {
                         width: parent.width
                         height: 45
@@ -180,13 +185,12 @@ Item {
                             anchors.fill: parent
                             onClicked: {
                                 var currentOrder = orderScreen.compileOrder()
-                                orderScreen.requestEditOrder(orderScreen.orderId, currentOrder)
+                                Waiter.orderEdit(orderScreen.orderId, currentOrder)
                                 actionsContainer.expanded = false
                             }
                         }
                     }
 
-                    // ── Cerrar Pedido ──
                     Rectangle {
                         width: parent.width
                         height: 45
@@ -209,7 +213,7 @@ Item {
                             anchors.fill: parent
                             onClicked: {
                                 var currentOrder = orderScreen.compileOrder()
-                                orderScreen.requestCloseOrder(orderScreen.orderId, currentOrder)
+                                Waiter.orderGetTotal(orderScreen.orderId, currentOrder)
                                 actionsContainer.expanded = false
                             }
                         }
@@ -240,6 +244,20 @@ Item {
                     onClicked: orderScreen.requestBack()
                 }
             }
+        }
+    }
+
+    OrderClosePopup {
+        id: closePopup
+        theme: orderScreen.theme
+        anchors.fill: parent
+
+        onConfirmed: {
+            Waiter.orderComplete(orderId)
+        }
+
+        onCancelled: {
+            actionsContainer.expanded = false
         }
     }
 

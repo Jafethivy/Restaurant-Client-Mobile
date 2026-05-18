@@ -17,13 +17,19 @@ signals:
     void getMenu();
     void tablesGetter(QVariantList tables);
     void menuGetter(QVariantList categories);
-    void orderGetter(QVariantList order);
 
+    void orderGetter(QVariantList order);
     void getOrder(int orderId);
+    void orderTotal(double total);
 
     void orderSubmitted(int idTable, QVariantList order);
     void orderCreated(QVariantMap order);
+    void orderEdit(int id_order, QVariantList order);
+    void orderGetTotal(int id_order, QVariantList order);
+    void orderComplete(int id_order);
+    void orderCancel(int id_order);
 
+    void orderCompleted(int id_table);
 
     void logoutWindow();
     void logoutServer();
