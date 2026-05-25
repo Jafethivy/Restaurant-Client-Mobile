@@ -5,7 +5,7 @@ project(Restaurant_Client_Mobile VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick WebSockets Network)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -35,6 +35,10 @@ set(CONTROLLERS
     src/controllers/waiter/WaiterController.h
     src/controllers/waiter/WaiterController.cpp
 )
+set(NETWORK
+    src/network/WebSocketClient.h
+    src/network/WebSocketClient.cpp
+)
 
 qt_add_executable(appRestaurant_Client_Mobile
     main.cpp
@@ -42,6 +46,7 @@ qt_add_executable(appRestaurant_Client_Mobile
     AppContext.cpp
     ${SERVICES}
     ${CONTROLLERS}
+    ${NETWORK}
 )
 
 set(QML_TABLES
@@ -83,7 +88,10 @@ set_target_properties(appRestaurant_Client_Mobile PROPERTIES
 )
 
 target_link_libraries(appRestaurant_Client_Mobile
-    PRIVATE Qt6::Quick
+    PRIVATE
+    Qt6::Quick
+    Qt6::WebSockets
+    Qt6::Network
 )
 
 if(ANDROID)

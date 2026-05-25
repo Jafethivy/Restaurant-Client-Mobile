@@ -22,6 +22,9 @@ WaiterController::WaiterController(Waiter* waiter, QObject *parent)
     connect(this, &WaiterController::orderCompleted,
         m_waiter, &Waiter::orderCompleted);
 
+    connect(this, &WaiterController::wsTableStatus,
+        m_waiter, &Waiter::wsTableStatus);
+
     connect(m_waiter, &Waiter::orderSubmitted,
         this, &WaiterController::orderSubmitted);
     connect(m_waiter, &Waiter::orderEdit,

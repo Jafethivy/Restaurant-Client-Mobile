@@ -21,6 +21,7 @@ signals:
     void orderGetter(QVariantList order);
     void getOrder(int orderId);
     void orderTotal(double total);
+    void orderCompleted(int id_table);
 
     void orderSubmitted(int idTable, QVariantList order);
     void orderCreated(QVariantMap order);
@@ -29,7 +30,7 @@ signals:
     void orderComplete(int id_order);
     void orderCancel(int id_order);
 
-    void orderCompleted(int id_table);
+    void wsTableStatus(QVariantMap result);
 
     void logoutWindow();
     void logoutServer();

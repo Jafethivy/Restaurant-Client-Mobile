@@ -13,6 +13,8 @@
 #include "src/services/MenuService.h"
 #include "src/services/OrderService.h"
 
+#include "src/network/WebSocketClient.h"
+
 AppContext::AppContext(QObject *parent)
     : QObject{parent}
 {}
@@ -41,18 +43,9 @@ void AppContext::createObjects(){
     m_tablesService = new TablesService();
     m_tablesService->setBaseUrl(m_baseUrl); //Cambiar
     m_menuService = new MenuService();
-    m_menuService->setBaseUrl(m_baseUrl); //cambiar
+    m_menuService->setBaseUrl(m_baseUrl); //Cambiar
     m_orderService = new OrderService();
-    m_orderService->setBaseUrl(m_baseUrl);
-
-    connect(m_authService, &AuthService::loginStatus, this, [this](int area, bool success) {
-        if (success) {
-            m_tablesService->setToken(m_authService->token());
-            m_menuService->setToken(m_authService->token());
-            m_orderService->setToken(m_authService->token());
-            m_waiter->getMenu();
-        }
-    });
+    m_orderService->setBaseUrl(m_baseUrl); //Cambiar
 }
 
 void AppContext::createSingeltons(){
@@ -74,7 +67,22 @@ void AppContext::setupThreads(){
 
 }
 
+void AppContext::setupIfSuccess(int area, bool success) {
+    if (success) {
+        m_webSocketClient = new WebSocketClient();
+        m_webSocketClient->connectToServer(m_wsUrl, m_authService->token());
+        setupWsConnections();
+        m_tablesService->setToken(m_authService->token());
+        m_menuService->setToken(m_authService->token());
+        m_orderService->setToken(m_authService->token());
+        m_waiter->getMenu();
+    }
+}
+
 void AppContext::setupConnections() const {
+    QObject::connect(m_authService, &AuthService::loginStatus,
+        this, &AppContext::setupIfSuccess);
+
     QObject::connect(m_loginController, &LoginController::loginAttempt,
         m_authService, &AuthService::attemptLogin,
         Qt::AutoConnection);
@@ -133,12 +141,21 @@ void AppContext::setupConnections() const {
     QObject::connect(m_waiterController, &WaiterController::logoutServer,
         m_authService, &AuthService::logout,
         Qt::AutoConnection);
+    QObject::connect(m_waiterController, &WaiterController::logoutServer,
+        this, &AppContext::cleanup,
+        Qt::AutoConnection);
 
     QObject::connect(m_orderService, &OrderService::orderCreated,
         m_waiterController, &WaiterController::orderCreated,
         Qt::AutoConnection);
 }
 
-void AppContext::cleanup(){
+void AppContext::setupWsConnections() const{
+    QObject::connect(m_webSocketClient, &WebSocketClient::tableStatusChange,
+        m_waiterController, &WaiterController::wsTableStatus,
+        Qt::AutoConnection);
+}
 
+void AppContext::cleanup(){
+    m_webSocketClient->~WebSocketClient();
 }

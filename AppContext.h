@@ -16,6 +16,8 @@ class TablesService;
 class MenuService;
 class OrderService;
 
+class WebSocketClient;
+
 class AppContext : public QObject
 {
     Q_OBJECT
@@ -27,12 +29,14 @@ private:
     void createObjects();
     void createSingeltons();
     void setupThreads();
+    void setupIfSuccess(int area, bool success);
     void setupConnections() const;
+    void setupWsConnections() const;
     void cleanup();
 
 private:
-    QString m_baseUrl = "http://192.168.1.84:8080/api";
-    QString m_baseUrlB = "http://172.16.26.233:8080/api";
+    QString m_baseUrl = "http://192.168.1.91:8080/api";
+    QString m_wsUrl = "ws://192.168.1.91:8081";
     QQmlApplicationEngine* engine = nullptr;
 
     Login* m_login = nullptr;
@@ -47,4 +51,6 @@ private:
     TablesService* m_tablesService = nullptr;
     MenuService* m_menuService = nullptr;
     OrderService* m_orderService = nullptr;
+
+    WebSocketClient* m_webSocketClient = nullptr;
 };

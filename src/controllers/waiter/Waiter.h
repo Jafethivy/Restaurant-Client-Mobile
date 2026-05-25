@@ -17,6 +17,7 @@ public slots:
     void orderCreated(QVariantMap order);
     void orderCompleted(int id_table);
 
+    void wsTableStatus(QVariantMap result);
 signals:
     void getMenu();
     void menuChanged();
@@ -36,7 +37,7 @@ signals:
     void closeSome_thing();
     void changeTableCompleted(int tableId, bool hasOrder, int orderId);
     void closeSomething();
-
+    void wsChangeTableStatus(int tableId, int tableStatus);
 
     void logout();
 private:

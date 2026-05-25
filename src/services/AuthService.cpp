@@ -45,11 +45,9 @@ void AuthService::attemptLogin(const QString& username, const QString& password)
         bool success = obj["success"].toBool();
         int area = obj["area"].toInt(-1);
         QString token = obj["token"].toString();
-        qDebug() << token;
 
         if (success && !token.isEmpty()) {
             m_token = token;
-            qDebug() << m_token;
             m_username = obj["username"].toString();
             m_area = area;
             emit loginStatus(area, true);

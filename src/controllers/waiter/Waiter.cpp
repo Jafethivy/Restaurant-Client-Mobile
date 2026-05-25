@@ -3,7 +3,7 @@
 Waiter::Waiter(QObject *parent)
     : QObject{parent}{
 }
-
+\
 void Waiter::menuSetter(QVariantList menu){
     m_menu = menu;
     emit menuChanged();
@@ -22,7 +22,13 @@ void Waiter::orderCreated(QVariantMap order){
 }
 
 void Waiter::orderCompleted(int id_table){
-    qDebug() << id_table;
+    qDebug() << "id_table" << id_table;
     emit changeTableCompleted(id_table, 0, 0);
     emit closeSomething();
+}
+
+void Waiter::wsTableStatus(QVariantMap result){
+    int tableId = result["tableId"].toInt();
+    int status = result["status"].toInt();
+    emit wsChangeTableStatus(tableId, status);
 }

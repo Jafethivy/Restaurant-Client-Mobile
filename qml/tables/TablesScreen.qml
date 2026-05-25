@@ -24,20 +24,17 @@ Item {
     function onTableOrderStatus(tableId, hasOrder, orderId){
         var newModel = [...tablesModel]
         if (newModel[tableId - 1]){
+            if(!hasOrder) {newModel[tableId-1].tableStatus = 0}
             newModel[tableId - 1].order = hasOrder
             newModel[tableId - 1].idOrder = orderId
         }
         tablesModel = newModel
     }
 
-    function onTableStatusChanged(tableId, status, extraData) {
+    function onTableStatusChanged(tableId, status) {
         var newModel = [...tablesModel]
-        for (var i = 0; i < newModel.length; i++) {
-            if (newModel[i].id === tableId) {
-                newModel[i].status = status
-                if (extraData) newModel[i].extra = extraData
-                break
-            }
+        if (newModel[tableId - 1]){
+            newModel[tableId - 1].status = status
         }
         tablesModel = newModel
     }
@@ -78,6 +75,9 @@ Item {
         }
         function onChangeTableCompleted(tableId, hasOrder, orderId){
             onTableOrderStatus(tableId, hasOrder, orderId)
+        }
+        function onWsChangeTableStatus(tableId, status){
+            onTableStatusChanged(tableId, status)
         }
     }
 
@@ -142,26 +142,6 @@ Item {
             Layout.fillWidth: true
             height: 50
             spacing: 16
-
-            Rectangle {
-                Layout.fillWidth: true
-                height: 50
-                radius: theme.borderRadiusSmall
-                color: mouseAreaHelp.containsPress ? theme.buttonSecondaryHover : theme.buttonSecondary
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "Ayuda"
-                    font { family: theme.fontFamily; pixelSize: theme.fontSizeMedium; bold: true }
-                    color: theme.textPrimary
-                }
-
-                MouseArea {
-                    id: mouseAreaHelp
-                    anchors.fill: parent
-                    onClicked: requestHelp()
-                }
-            }
 
             Rectangle {
                 Layout.fillWidth: true
