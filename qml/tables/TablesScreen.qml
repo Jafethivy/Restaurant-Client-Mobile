@@ -118,11 +118,11 @@ Item {
                     model: tablesModel
 
                     TableItem {
-                        tableId: modelData.idTable
+                        tableId: modelData.tableId
                         tableStatus: modelData.status
                         hasOrder: modelData.order
                         orderId: modelData.idOrder
-                        tableName: modelData.name || ("Mesa " + modelData.idTable)
+                        tableName: modelData.name || ("Mesa " + modelData.tableId)
                         extraData: modelData.extra || null
                         theme: tablesScreen.theme
                         width: (grid.width - grid.spacing) / 2
